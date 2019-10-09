@@ -10,6 +10,9 @@ require('dotenv').config();
 // Erstellen von einem ExpressJS Server
 const app = express();
 
+// Set View Engine to EJS Rendering
+app.set('view engine', 'ejs');
+
 /**
  * Aufbau einer Datenbankverbindung
  * Das Objekt kann zum erstellen von Models verwendet werden
@@ -76,12 +79,13 @@ app.get('/db/destroy', async (req, res) => {
  * Eintrittspunkt wenn man auf die Seite kommt. Dies wird am Client angezeigt
  */
 app.get('/', async (req, res) => {
-
     try {
         let schueler = await User.findAll();
     } catch (e) {
         // TODO Render Error when fetching schueler
     }
+
+    res.render('index');
 
     // TODO Render Table with schueler
     // TODO Render Home Page
