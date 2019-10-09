@@ -6,8 +6,6 @@ const Sequelize = require('sequelize');
 // Import der Umgebungsvariablen
 require('dotenv').config();
 
-// TODO Implementing EJS for Rendering
-
 // Erstellen von einem ExpressJS Server
 const app = express();
 
@@ -76,7 +74,7 @@ app.get('/db/destroy', async (req, res) => {
      try {
          await User.sync({force: true})
      } catch (e) {
-         // TODO Render Error when deleting Table
+         res.render('error', {error: 'Schüler konnte nicht gelöscht werden'})
      }
 });
 
@@ -88,7 +86,7 @@ app.get('/', async (req, res) => {
     try {
         let schueler = await User.findAll();
     } catch (e) {
-        // TODO Render Error when fetching schueler
+        res.render('error', {error: 'Schüler konnten nicht gelanden werden'})
     }
 
     res.render('index');
@@ -113,7 +111,7 @@ app.get('/schueler/create', async (req, res) => {
     try {
         let [user, created] = await User.findOrCreate({where: {vorname: vorname, nachname: nachname}, defaults: {klasse: klasse, ausbildungszweig: ausbildungszweig}})
     } catch (e) {
-        // TODO Render Error for creating
+        res.render('error', {error: 'Schüler konnte nicht erstellt werden'})
     }
 
     // TODO return Statment for Validating if Schueler existst and rendering File
@@ -136,7 +134,7 @@ app.delete('/schueler/delete', async (req, res) => {
             }
         })
     } catch (e) {
-        // TODO Render Error for deleting
+        res.render('error', {error: 'Schüler konnte nicht gelöscht werden'})
     }
 
     // TODO Render for Deleting Schueler
