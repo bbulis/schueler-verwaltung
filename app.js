@@ -1,5 +1,6 @@
 // Import von ExpressJS
 const express = require('express');
+const partials = require('express-partials');
 // Import von Sequelize (Datenbankverbinungssystem)
 const Sequelize = require('sequelize');
 // Import der Umgebungsvariablen
@@ -12,6 +13,7 @@ const app = express();
 
 // Set View Engine to EJS Rendering
 app.set('view engine', 'ejs');
+app.set(partials());
 
 /**
  * Aufbau einer Datenbankverbindung
@@ -59,6 +61,10 @@ app.get('/db', (req, res) => {
         console.log('Error: ' + err.toString())
     });
     res.send();
+});
+
+app.get('/error', (req, res) => {
+    res.render('error', {error: 'Test Error'})
 });
 
 /**
