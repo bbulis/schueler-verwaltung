@@ -12,6 +12,7 @@ const app = express();
 // Set View Engine to EJS Rendering
 app.set('view engine', 'ejs');
 app.set(partials());
+app.use(express.urlencoded());
 
 /**
  * Aufbau einer Datenbankverbindung
@@ -32,7 +33,7 @@ const sequelize = new Sequelize(process.env.DB_DATABASE,
  * 4 Felder ( vorname, nachname, klasse, ausbildungszweig )
  * Das erste Argument bei sequelize.define ist der Table-Name. So wird dieser Später in der Datenbank lauten
  */
-const User = sequelize.define('schueler', {
+const Schueler = sequelize.define('schueler', {
     vorname: {
         type: Sequelize.STRING,
         allowNull: false
@@ -45,7 +46,7 @@ const User = sequelize.define('schueler', {
         type: Sequelize.STRING,
         allowNull: false
     },
-    ausbilungszweig: {
+    zweig: {
         type: Sequelize.STRING,
         allowNull: true
     }
@@ -72,9 +73,11 @@ app.get('/error', (req, res) => {
  */
 app.get('/db/destroy', async (req, res) => {
      try {
-         await User.sync({force: true})
+         await Schueler.sync({force: true});
+         console.log('Datenbank wurde gelöscht');
+         return res.redirect('/');
      } catch (e) {
-         res.render('error', {error: 'Schüler konnte nicht gelöscht werden'})
+         return res.render('error', {error: 'Schüler konnte nicht gelöscht werden'})
      }
 });
 
@@ -84,49 +87,52 @@ app.get('/db/destroy', async (req, res) => {
  */
 app.get('/', async (req, res) => {
     try {
-        let schueler = await User.findAll();
+        let schueler = await Schueler.findAll();
+        return res.render('index', {schueler: schueler});
     } catch (e) {
-        res.render('error', {error: 'Schüler konnten nicht gelanden werden'})
+        console.log(e);
+        return res.render('error', {error: 'Schüler konnten nicht gelanden werden'})
     }
-
-    res.render('index');
-
-    // TODO Render Table with schueler
-    // TODO Render Home Page
 });
 
 /**
  * Erstellungs Route für einen neuen Schueler
  */
-app.get('/schueler/create', async (req, res) => {
+app.post('/schueler', async (req, res) => {
     // Aus dem Request Objekt die notwendigen Informationen herausholen
     let vorname = req.body.vorname;
     let nachname = req.body.nachname;
     let klasse = req.body.klasse;
-    let ausbildungszweig = req.body.ausbildungszweig;
+    let zweig = req.body.zweig;
     /**
      * Pürfen ob ein Schueler schon vorhanden ist
      * Ist dieser Vorhanden so wird der created auf False gesetzt und kein User zurückgegeben
      */
-    try {
-        let [user, created] = await User.findOrCreate({where: {vorname: vorname, nachname: nachname}, defaults: {klasse: klasse, ausbildungszweig: ausbildungszweig}})
-    } catch (e) {
-        res.render('error', {error: 'Schüler konnte nicht erstellt werden'})
-    }
+    console.log('Vorname' + vorname);
 
-    // TODO return Statment for Validating if Schueler existst and rendering File
+    try {
+        let [schueler, created] = await Schueler.findOrCreate({where: {vorname: vorname, nachname: nachname}, defaults: {klasse: klasse, zweig: zweig}});
+        if (created) {
+            return res.redirect('/');
+        } else {
+            return res.render('error', {error: 'Schüler konnte nicht erstellt werden'})
+        }
+    } catch (e) {
+        console.log(e);
+        return res.render('error', {error: 'Schüler konnte nicht erstellt werden'})
+    }
 });
 
 /**
  * Endpoint zum löschen eines Schuelers
  */
-app.delete('/schueler/delete', async (req, res) => {
+app.post('/schueler/delete', async (req, res) => {
     let vorname = req.body.vorname;
     let nachname = req.body.nachname;
     let klasse = req.body.klasse;
 
     try {
-        await User.destroy({
+        await Schueler.destroy({
             where: {
                 vorname: vorname,
                 nachname: nachname,
@@ -137,7 +143,7 @@ app.delete('/schueler/delete', async (req, res) => {
         res.render('error', {error: 'Schüler konnte nicht gelöscht werden'})
     }
 
-    // TODO Render for Deleting Schueler
+    return res.redirect('/');
 });
 
 // Setzen des Ports für den ExpressJS Server

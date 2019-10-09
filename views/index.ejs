@@ -17,14 +17,70 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <th>Benjamin</th>
-            <td>Bulis</td>
-            <td>5CHIT</td>
-            <td>MEDT</td>
-        </tr>
+            <% schueler.forEach(function (schueler) { %>
+                <tr>
+                    <td><%= schueler.vorname %></td>
+                    <td><%= schueler.nachname %></td>
+                    <td><%= schueler.klasse %></td>
+                    <td><%= schueler.zweig %></td>
+                </tr>
+            <% }) %>
         </tbody>
     </table>
+</div>
+<br><br><br><br>
+<div class="row justify-content-md-center">
+    <div class="col-4">
+        <form method="POST" action="/schueler">
+            <div class="from-group">
+                <label for="vorname">Vorname</label>
+                <input type="text" class="form-control" id="vorname" name="vorname" placeholder="Vorname">
+            </div>
+            <br>
+            <div class="from-group">
+                <label for="nachname">Nachname</label>
+                <input type="text" class="form-control" id="nachname" name="nachname" placeholder="Nachname">
+            </div>
+            <br>
+            <div class="from-group">
+                <label for="klasse">Klasse</label>
+                <input type="text" class="form-control" id="klasse" name="klasse" placeholder="Klasse">
+            </div>
+            <br>
+            <div class="from-group">
+                <label for="zweig">Ausbildungszweig</label>
+                <select class="form-control" id="zweig" name="zweig">
+                    <option>MEDT</option>
+                    <option>SYT</option>
+                    <option>Neutral</option>
+                </select>
+            </div><br>
+            <button type="submit" class="btn btn-primary">Hinzufügen</button>
+        </form>
+    </div>
+</div>
+<br><br><br><br>
+<div class="row justify-content-md-center">
+    <div class="col-4">
+        <form method="POST" action="/schueler/delete">
+            <div class="from-group">
+                <label for="vorname">Vorname</label>
+                <input type="text" class="form-control" id="vorname" name="vorname" placeholder="Vorname">
+            </div>
+            <br>
+            <div class="from-group">
+                <label for="nachname">Nachname</label>
+                <input type="text" class="form-control" id="nachname" name="nachname" placeholder="Nachname">
+            </div>
+            <br>
+            <div class="from-group">
+                <label for="klasse">Klasse</label>
+                <input type="text" class="form-control" id="klasse" name="klasse" placeholder="Klasse">
+            </div>
+            <br>
+            <button type="submit" class="btn btn-primary">Löschen</button>
+        </form>
+    </div>
 </div>
 <% include partials/footer.ejs %>
 </body>
