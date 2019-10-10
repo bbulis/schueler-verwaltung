@@ -1,8 +1,13 @@
 <html>
 <head>
+    <!-- Einbinden von allen Imports
+     Eigenes File -->
     <% include partials/head.ejs %>
 </head>
 <body>
+<!-- Einbinden der Navbar
+ Eigenes File
+ Navbar wird von EJS in einer Output-HTML gerendert -->
 <% include partials/nav.ejs %>
 <div class="container">
     <h1>Schülerverwaltung</h1>
@@ -17,8 +22,10 @@
         </tr>
         </thead>
         <tbody>
+            <!-- List der Schüler wird durchiteriert -->
             <% schueler.forEach(function (schueler) { %>
                 <tr>
+                    <!-- Einzelne Informationen können aus dem Objekt geholt werden -->
                     <td><%= schueler.vorname %></td>
                     <td><%= schueler.nachname %></td>
                     <td><%= schueler.klasse %></td>
@@ -31,6 +38,7 @@
 <br><br><br><br>
 <div class="row justify-content-md-center">
     <div class="col-4">
+        <!-- Wird ein Schüler zur Datenbank hinzugefügt so wird ein POST Request an den Endpoint /schueler geschickt -->
         <form method="POST" action="/schueler">
             <div class="from-group">
                 <label for="vorname">Vorname</label>
@@ -62,6 +70,7 @@
 <br><br><br><br>
 <div class="row justify-content-md-center">
     <div class="col-4">
+        <!-- Wird ein Schüler gelöscht wird ein POST Request an den Endpoint /schueler/delete geschickt -->
         <form method="POST" action="/schueler/delete">
             <div class="from-group">
                 <label for="vorname">Vorname</label>
@@ -82,6 +91,7 @@
         </form>
     </div>
 </div>
+<!-- JavaScript Import werden am Ende des Bodys eingebunden -->
 <% include partials/footer.ejs %>
 </body>
 </html>

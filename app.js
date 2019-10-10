@@ -108,9 +108,9 @@ app.get('/', async (req, res) => {
 
 /**
  * Erstellungs Route für einen neuen Schueler
+ * Die Nötigen Informationen für die erstellung werden aus dem Request-Body geholt und in eine lokale Variable gespeichert
  */
 app.post('/schueler', async (req, res) => {
-    // Aus dem Request Objekt die notwendigen Informationen herausholen
     let vorname = req.body.vorname;
     let nachname = req.body.nachname;
     let klasse = req.body.klasse;
@@ -122,6 +122,8 @@ app.post('/schueler', async (req, res) => {
     console.log('Vorname' + vorname);
 
     try {
+        // Der Schüler wird hinzugefügt zur Datenbank wenn er in der Datenbank nicht gefunden wird
+        // Sollte der Schüler nicht erstekllt worden sein so wird Created auf false gesetzt -> Überprüfung notwendig
         let [schueler, created] = await Schueler.findOrCreate({where: {vorname: vorname, nachname: nachname}, defaults: {klasse: klasse, zweig: zweig}});
         if (created) {
             return res.redirect('/');
@@ -160,7 +162,10 @@ app.post('/schueler/delete', async (req, res) => {
 // Setzen des Ports für den ExpressJS Server
 const port = process.env.PORT;
 
-// Hier wird dem Server gesagt auf welchen Port er arbeiten soll und was er als bestätigung ausgeben soll
+/**
+ * Server wird mitgeteilt auf welchen PORT er Anfragen annehmen soll
+ * Wird der Server erfolgreich gestartet so wird eine Meldung auf der Konsole ausgegeben
+ */
 app.listen(port, () => {
     console.log(`Server is running on Port ${port}`)
 });
