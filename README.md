@@ -7,12 +7,12 @@ Entwickle eine einfache Webanwendung zur Verwaltung von Schülerinnen und Schül
 * Schüler sollen neu angelegt und auch gelöscht werden können.
 
 ## Verwendete Software
-* NodeJS
-* ExpressJS für den Server
-* Sequelize für die Datenbankverbindung
-* dotenv für die Setzung der Umgebungsvariablen
+* NodeJS https://nodejs.org/docs/latest-v11.x/api/
+* ExpressJS für den Server https://expressjs.com/de/4x/api.html
+* Sequelize für die Datenbankverbindung https://sequelize.org/master/
+* dotenv für die Setzung der Umgebungsvariablen https://www.npmjs.com/package/dotenv
 
-### Setzen der Umgebungsvariablen
+## Setzen der Umgebungsvariablen
 Um die Software lauffähig zu machen muss im Root Verzeichnis ein ``.env`` File erstellt werden.
 Dieses muss minimum Folgende Variablen beinhalten:
 ```
@@ -24,10 +24,8 @@ DB_HOST=<YOUR-DB-HOST>
 PORT=<YOUR-PORT>
 ```
 
-Zu Beachten ist das die MySQL Datenbank extern gehostet wird. Alle Daten werden in einer Datenbank gesichert.
-#### Es ist nur MySQL zu verwenden. Verwendung von anderen Datenbank auf eigene Gefahr
+Zu Beachten ist das die MySQL Datenbank extern gehostet wird. Alle Daten werden in einer Datenbank gesichert. Eine Datenbank ist nicht intergriert.
 
-Beispiel Konfiguration
 ```
 DB_DATABASE=schuelerverwaltung
 DB_USER=schuelerUser
@@ -37,6 +35,11 @@ DB_HOST=example.com
 PORT=3000
 ```
 
+## Zu beachten
+
+Als Datenbank **MUSS** MySQL verwendet werden. Für andere Datenbanken ist die Verwendung nicht bestimmt. Sollte eine andere Datenbank verwendet werden, so muss die Konfiguration von Sequelize überarbeitet werden. Dies betrifft die Installierten NPM-Pakete und den zu verwendenden Sequelize-Dialect. Hierbei Verweise ich auf die Dokumentation von Sequelize
+
 ## Copyright
+
 * Aufgabenstellung von Prof. Christoph Roschger
 * Code von Benjamin Bulis
