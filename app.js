@@ -18,6 +18,8 @@ app.use(express.urlencoded());
  * Aufbau einer Datenbankverbindung
  * Das Objekt kann zum erstellen von Models verwendet werden
  * Dokumentation https://sequelize.org/master/
+ * Umgebungsvariabelen werden Entnommen und hinzugefügt
+ * Vorteil davon ist das die Variablen geändert werden können ohne das der Code geändert wird
  */
 const sequelize = new Sequelize(process.env.DB_DATABASE,
                                 process.env.DB_USER,
@@ -52,16 +54,23 @@ const Schueler = sequelize.define('schueler', {
     }
 });
 
-// Testen der Datenbankverbindung
+/**
+ * Testen der Datenbankverbindung
+ * Ist die Verbindung ok so wird eine Medlung auf der Konsole ausgegeben
+ * Wenn nicht wird der Error ausgegeben
+ */
 app.get('/db', (req, res) => {
     sequelize.authenticate().then(() => {
         console.log('DB Works')
     }).catch((err) => {
         console.log('Error: ' + err.toString())
     });
-    res.send();
+    res.redirect('/');
 });
 
+/**
+ * Endpoint zum Testen der Error Seite ob diese Funktioniet und korrekt gerendert wird
+ */
 app.get('/error', (req, res) => {
     res.render('error', {error: 'Test Error'})
 });
@@ -70,6 +79,7 @@ app.get('/error', (req, res) => {
  * Wird dieser Endpoint angefragt so wird der Table gelöscht und neu gesetzt.
  * force: true - Table löschen und neu setzten
  * force: false - Table neu setzten. Gelöscht wird nicht. Kann zu Errors führen
+ * Kann der Table nicht gelöscht und neu Aufgesetzt werden so wird die Error Seite aufgerufen
  */
 app.get('/db/destroy', async (req, res) => {
      try {
@@ -77,13 +87,14 @@ app.get('/db/destroy', async (req, res) => {
          console.log('Datenbank wurde gelöscht');
          return res.redirect('/');
      } catch (e) {
-         return res.render('error', {error: 'Schüler konnte nicht gelöscht werden'})
+         return res.render('error', {error: 'Datenbank konnte nicht gelöscht werden'})
      }
 });
 
 /**
  * Home route
  * Eintrittspunkt wenn man auf die Seite kommt. Dies wird am Client angezeigt
+ * Die Datenbankverbindung holt alle Schüler aus der Datenbank und gibt diese als Objekt weiter an die EJS Datei
  */
 app.get('/', async (req, res) => {
     try {
